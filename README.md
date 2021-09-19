@@ -1,5 +1,4 @@
 # img2ascii
-# ascii-art-braille-chars
 
 ## Welcome
 

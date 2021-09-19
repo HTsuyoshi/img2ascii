@@ -44,12 +44,14 @@ int main(int argc,char **argv) {
             scale,
             file_index;
 
+
         /* --- Set environment --- */
 
         /* Create folder to ascii art*/
         path folder{waifu_directory};
         if (!exists(folder))
             create_directory(folder);
+
 
         /* --- Errors --- */
 
@@ -63,14 +65,22 @@ int main(int argc,char **argv) {
 
         /* --- Options --- */
 
+        /* Help */
+        if(cmdl({"-h", "--help"})) {
+            cout << usage;
+            return 0;
+        }
+
+
         /* Print from buffer */
-        if (cmdl({"-b","--buffer"})) {
+        if (cmdl({"-b","--buffer"}) && argc < 4) {
             cmdl({"-b","--buffer"}) >> file_index;
             if (exists(waifu_file(file_index))) {
                 print_buff(file_index);
                 return 0;
             }
         }
+
 
         /* Clear buffer */
         if (cmdl({"-c","--clear"})) {
@@ -80,12 +90,15 @@ int main(int argc,char **argv) {
             return 0;
         }
 
+
         /* Set threshold */
         if (cmdl({"-t","--threshold"}))
             cmdl({"-t","--threshold"}) >> threshold;
 
+
         /* Scale image */
         cmdl({"-s", "--scale"}, 200) >> scale;
+
 
         /* --- Iterate over args --- */
 
@@ -96,13 +109,15 @@ int main(int argc,char **argv) {
                 continue;
             }
 
+
             /* Read a file into image object */
             image.read( images );
-
             image.scale(Geometry(scale, scale));
+
 
             max_columns = image.columns();
             max_rows = image.rows();
+
 
             /* Get average */
             if (!cmdl({"-t","--threshold"})) {
@@ -114,14 +129,17 @@ int main(int argc,char **argv) {
                 threshold = threshold / (max_rows * max_columns);
             }
 
-            columns = (int)((max_columns/2)+1);
-            rows = (int)((max_rows/4)+1);
 
             /* Create ascii art */
+
+            columns = (int)((max_columns/2)+1);
+            rows = (int)((max_rows/4)+1);
             string ascii_art[rows][columns];
+
             for (int i=0; i<max_columns; i+=2) {
                 for (int j=0; j<max_rows; j+=4) {
 
+                    /* Calc one char */
                     int character = 0;
                     for (int r=0; r<4; r++) {
                         for (int c=0; c<2; c++) {
@@ -130,8 +148,10 @@ int main(int argc,char **argv) {
                                 character += 1 << (r*2 + c);
                     }}
 
-                    ascii_art[(int)(j/4)][(int)(i/2)] = (string) braille_data[character];
+                    ascii_art[(int)(j/4)][(int)(i/2)] = 
+                        (string) braille_data[character];
             }}
+
 
             /* Print the ascii art */
             for (int i=0; i<rows; i++) {
@@ -141,15 +161,18 @@ int main(int argc,char **argv) {
                 cout << endl;
             }
 
+
             /* Save in a buffer */
             if (cmdl({"-b","--buffer"})) {
                 cmdl({"-b", "--buffer"}, 1) >> file_index;
 
+                /* Error */
                 if (exists(waifu_file(file_index))) {
                     cout << buff_used;
                     return 1;
                 }
 
+                /* Save file */
                 ofstream file;
                 file.open(waifu_file(file_index), ios::out);
 
@@ -158,12 +181,15 @@ int main(int argc,char **argv) {
                         file << ascii_art[i][j];
                     }
                     file << endl;
-                }
+                    }
                 file.close();
         }}
+
+
     } catch ( Exception &error_ ) { 
         cout << "Caught exception: " << error_.what() << endl; 
         return 1; 
     } 
+
     return 0; 
 } 

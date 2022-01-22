@@ -1,16 +1,16 @@
-#include <Magick++.h> 
+#include <Magick++.h>
 #include <filesystem>
-#include <iostream> 
-#include <fstream> 
+#include <iostream>
+#include <fstream>
 #include <cstring>
 
-using namespace std; 
-using namespace Magick; 
-using namespace filesystem; 
+using namespace std;
+using namespace Magick;
+using namespace filesystem;
 
 #include "braille_data.h"
 #include "strings.h"
-#include "argh.h"
+#include "../argh/argh.h"
 
 #define waifu_directory "/tmp/waifu/"
 #define waifu_file(a) "/tmp/waifu/" + to_string(a)

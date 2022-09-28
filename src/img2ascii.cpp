@@ -10,7 +10,6 @@ using namespace filesystem;
 
 #include "braille_data.h"
 #include "strings.h"
-#include "../argh/argh.h"
 
 #define waifu_directory "/tmp/waifu/"
 #define waifu_file(a) "/tmp/waifu/" + to_string(a)
